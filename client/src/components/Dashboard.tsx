@@ -16,6 +16,7 @@ interface Measurement {
   clientId: string;
   height: string;
   width: string;
+  type: string;
   createdAt: string;
 }
 
@@ -29,9 +30,9 @@ export default function Dashboard() {
 
   // todo: remove mock functionality  
   const [measurements, setMeasurements] = useState<Measurement[]>([
-    { id: '1', clientId: '1', height: '84.50', width: '36.25', createdAt: '2024-03-15T14:30:00Z' },
-    { id: '2', clientId: '1', height: '96.00', width: '48.75', createdAt: '2024-03-15T15:45:00Z' },
-    { id: '3', clientId: '2', height: '80.25', width: '32.00', createdAt: '2024-03-15T16:20:00Z' },
+    { id: '1', clientId: '1', height: '84.50', width: '36.25', type: 'Door', createdAt: '2024-03-15T14:30:00Z' },
+    { id: '2', clientId: '1', height: '96.00', width: '48.75', type: 'Window', createdAt: '2024-03-15T15:45:00Z' },
+    { id: '3', clientId: '2', height: '80.25', width: '32.00', type: 'Fixed pane', createdAt: '2024-03-15T16:20:00Z' },
   ]);
 
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
@@ -58,7 +59,7 @@ export default function Dashboard() {
     }
   };
 
-  const handleSaveMeasurement = (width: number, height: number) => {
+  const handleSaveMeasurement = (width: number, height: number, type: string) => {
     if (!selectedClient) return;
 
     const newMeasurement: Measurement = {
@@ -66,6 +67,7 @@ export default function Dashboard() {
       clientId: selectedClient.id,
       height: height.toFixed(2),
       width: width.toFixed(2),
+      type,
       createdAt: new Date().toISOString(),
     };
     setMeasurements([newMeasurement, ...measurements]);

@@ -12,6 +12,7 @@ export const clients = pgTable("clients", {
 export const measurements = pgTable("measurements", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   clientId: varchar("client_id").notNull().references(() => clients.id),
+  type: text("type").notNull().default("Door"),
   height: decimal("height", { precision: 10, scale: 2 }).notNull(),
   width: decimal("width", { precision: 10, scale: 2 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),

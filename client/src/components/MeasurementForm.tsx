@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Ruler, Save } from "lucide-react";
 import { parseFraction } from "@/utils/fractionParser";
 
 interface MeasurementFormProps {
   clientName: string | null;
-  onSaveMeasurement: (width: number, height: number) => void;
+  onSaveMeasurement: (width: number, height: number, type: string) => void;
   disabled?: boolean;
 }
 
@@ -19,6 +20,7 @@ export default function MeasurementForm({
 }: MeasurementFormProps) {
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
+  const [type, setType] = useState("Door");
   const [widthError, setWidthError] = useState("");
   const [heightError, setHeightError] = useState("");
 
@@ -50,12 +52,13 @@ export default function MeasurementForm({
     const heightNum = validateInput(height, setHeightError);
     
     if (widthNum !== null && heightNum !== null && widthNum > 0 && heightNum > 0) {
-      onSaveMeasurement(widthNum, heightNum);
+      onSaveMeasurement(widthNum, heightNum, type);
       setWidth("");
       setHeight("");
+      setType("Door");
       setWidthError("");
       setHeightError("");
-      console.log('Measurement saved:', { width: widthNum, height: heightNum });
+      console.log('Measurement saved:', { width: widthNum, height: heightNum, type });
     }
   };
 
@@ -82,6 +85,24 @@ export default function MeasurementForm({
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <Label className="text-sm font-medium">Type</Label>
+              <RadioGroup value={type} onValueChange={setType} className="flex gap-6 mt-2" data-testid="radio-group-type">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Door" id="door" data-testid="radio-door" />
+                  <Label htmlFor="door" className="text-sm font-normal cursor-pointer">Door</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Window" id="window" data-testid="radio-window" />
+                  <Label htmlFor="window" className="text-sm font-normal cursor-pointer">Window</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Fixed pane" id="fixed-pane" data-testid="radio-fixed-pane" />
+                  <Label htmlFor="fixed-pane" className="text-sm font-normal cursor-pointer">Fixed pane</Label>
+                </div>
+              </RadioGroup>
+            </div>
+            
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="width">Width (inches)</Label>

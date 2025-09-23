@@ -9,6 +9,7 @@ interface Measurement {
   id: string;
   height: string;
   width: string;
+  type: string;
   createdAt: string;
 }
 
@@ -79,6 +80,9 @@ export default function MeasurementList({ measurements, clientName, onDeleteMeas
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
                     <div className="flex items-center gap-3">
+                      <Badge variant="secondary" className="text-xs" data-testid={`text-type-${measurement.id}`}>
+                        {measurement.type}
+                      </Badge>
                       <div className="flex items-center gap-1">
                         <span className="text-sm font-medium">W:</span>
                         <span className="font-mono text-sm" data-testid={`text-width-${measurement.id}`}>
@@ -115,7 +119,7 @@ export default function MeasurementList({ measurements, clientName, onDeleteMeas
                       <AlertDialogHeader>
                         <AlertDialogTitle>Delete Measurement</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Are you sure you want to delete this measurement (W: {formatMeasurement(parseFloat(measurement.width))}", H: {formatMeasurement(parseFloat(measurement.height))}")? This action cannot be undone.
+                          Are you sure you want to delete this {measurement.type} measurement (W: {formatMeasurement(parseFloat(measurement.width))}", H: {formatMeasurement(parseFloat(measurement.height))}")? This action cannot be undone.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
