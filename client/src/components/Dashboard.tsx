@@ -45,7 +45,7 @@ export default function Dashboard() {
     setClients([...clients, newClient]);
   };
 
-  const handleSaveMeasurement = (height: number, width: number) => {
+  const handleSaveMeasurement = (width: number, height: number) => {
     if (!selectedClient) return;
 
     const newMeasurement: Measurement = {

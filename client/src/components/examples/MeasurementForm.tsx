@@ -4,7 +4,7 @@ import MeasurementForm from '../MeasurementForm'
 export default function MeasurementFormExample() {
   const [measurements, setMeasurements] = useState([]);
 
-  const handleSaveMeasurement = (height, width) => {
+  const handleSaveMeasurement = (width: number, height: number) => {
     const newMeasurement = {
       id: Date.now().toString(),
       height,

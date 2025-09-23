@@ -76,15 +76,15 @@ export default function MeasurementList({ measurements, clientName }: Measuremen
                   <div className="space-y-1">
                     <div className="flex items-center gap-3">
                       <div className="flex items-center gap-1">
-                        <span className="text-sm font-medium">H:</span>
-                        <span className="font-mono text-sm" data-testid={`text-height-${measurement.id}`}>
-                          {measurement.height}"
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1">
                         <span className="text-sm font-medium">W:</span>
                         <span className="font-mono text-sm" data-testid={`text-width-${measurement.id}`}>
                           {measurement.width}"
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-sm font-medium">H:</span>
+                        <span className="font-mono text-sm" data-testid={`text-height-${measurement.id}`}>
+                          {measurement.height}"
                         </span>
                       </div>
                     </div>
