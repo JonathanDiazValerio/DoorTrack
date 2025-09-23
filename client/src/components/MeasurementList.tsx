@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Ruler, Clock, Trash2 } from "lucide-react";
+import { formatMeasurement } from "@/utils/fractionParser";
 
 interface Measurement {
   id: string;
@@ -81,13 +82,13 @@ export default function MeasurementList({ measurements, clientName, onDeleteMeas
                       <div className="flex items-center gap-1">
                         <span className="text-sm font-medium">W:</span>
                         <span className="font-mono text-sm" data-testid={`text-width-${measurement.id}`}>
-                          {measurement.width}"
+                          {formatMeasurement(parseFloat(measurement.width))}"
                         </span>
                       </div>
                       <div className="flex items-center gap-1">
                         <span className="text-sm font-medium">H:</span>
                         <span className="font-mono text-sm" data-testid={`text-height-${measurement.id}`}>
-                          {measurement.height}"
+                          {formatMeasurement(parseFloat(measurement.height))}"
                         </span>
                       </div>
                     </div>
@@ -114,7 +115,7 @@ export default function MeasurementList({ measurements, clientName, onDeleteMeas
                       <AlertDialogHeader>
                         <AlertDialogTitle>Delete Measurement</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Are you sure you want to delete this measurement (W: {measurement.width}", H: {measurement.height}")? This action cannot be undone.
+                          Are you sure you want to delete this measurement (W: {formatMeasurement(parseFloat(measurement.width))}", H: {formatMeasurement(parseFloat(measurement.height))}")? This action cannot be undone.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
