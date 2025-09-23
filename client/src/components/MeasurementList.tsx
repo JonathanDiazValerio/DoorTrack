@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Ruler, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Ruler, Clock, Trash2 } from "lucide-react";
 
 interface Measurement {
   id: string;
@@ -12,9 +14,10 @@ interface Measurement {
 interface MeasurementListProps {
   measurements: Measurement[];
   clientName: string | null;
+  onDeleteMeasurement: (measurementId: string) => void;
 }
 
-export default function MeasurementList({ measurements, clientName }: MeasurementListProps) {
+export default function MeasurementList({ measurements, clientName, onDeleteMeasurement }: MeasurementListProps) {
   const formatDateTime = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -95,6 +98,42 @@ export default function MeasurementList({ measurements, clientName }: Measuremen
                       </span>
                     </div>
                   </div>
+                  
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-muted-foreground hover:text-destructive h-8 w-8"
+                        data-testid={`button-delete-measurement-${measurement.id}`}
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Measurement</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to delete this measurement (W: {measurement.width}", H: {measurement.height}")? This action cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel data-testid={`button-cancel-delete-measurement-${measurement.id}`}>
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => {
+                            onDeleteMeasurement(measurement.id);
+                            console.log('Measurement deleted:', measurement.id);
+                          }}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          data-testid={`button-confirm-delete-measurement-${measurement.id}`}
+                        >
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </div>
             ))}

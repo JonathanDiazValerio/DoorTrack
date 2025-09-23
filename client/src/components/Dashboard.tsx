@@ -71,6 +71,10 @@ export default function Dashboard() {
     setMeasurements([newMeasurement, ...measurements]);
   };
 
+  const handleDeleteMeasurement = (measurementId: string) => {
+    setMeasurements(measurements.filter(measurement => measurement.id !== measurementId));
+  };
+
   const clientMeasurements = selectedClient 
     ? measurements.filter(m => m.clientId === selectedClient.id)
     : [];
@@ -105,6 +109,7 @@ export default function Dashboard() {
             <MeasurementList
               measurements={clientMeasurements}
               clientName={selectedClient?.name || null}
+              onDeleteMeasurement={handleDeleteMeasurement}
             />
           </div>
         </div>

@@ -1,8 +1,10 @@
 import MeasurementList from '../MeasurementList'
 
+import { useState } from 'react'
+
 export default function MeasurementListExample() {
   // todo: remove mock functionality
-  const mockMeasurements = [
+  const [measurements, setMeasurements] = useState([
     {
       id: '1',
       height: '84.50',
@@ -21,12 +23,17 @@ export default function MeasurementListExample() {
       width: '32.00',
       createdAt: '2024-03-15T16:20:00Z',
     },
-  ];
+  ]);
+
+  const handleDeleteMeasurement = (measurementId: string) => {
+    setMeasurements(measurements.filter(m => m.id !== measurementId));
+  };
 
   return (
     <MeasurementList
-      measurements={mockMeasurements}
+      measurements={measurements}
       clientName="Johnson Construction"
+      onDeleteMeasurement={handleDeleteMeasurement}
     />
   )
 }
