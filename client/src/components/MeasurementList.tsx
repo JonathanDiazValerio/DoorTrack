@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Ruler, Clock, Trash2 } from "lucide-react";
+import { Ruler, Clock, Trash2, Download } from "lucide-react";
 import { formatMeasurement } from "@/utils/fractionParser";
 
 interface Measurement {
@@ -33,18 +33,99 @@ export default function MeasurementList({ measurements, clientName, onDeleteMeas
     });
   };
 
+  const exportMeasurements = () => {
+    if (!clientName || measurements.length === 0) return;
+
+    // Create header
+    const header = `MEASUREMENT REPORT\n`;
+    const clientInfo = `Client: ${clientName}\n`;
+    const dateInfo = `Generated: ${new Date().toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })} at ${new Date().toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    })}\n`;
+    const separator = `${'='.repeat(70)}\n\n`;
+
+    // Create table header
+    const tableHeader = `${'Type'.padEnd(12)} ${'Width'.padEnd(10)} ${'Height'.padEnd(10)} ${'Date & Time'.padEnd(25)}\n`;
+    const tableSeparator = `${'-'.repeat(70)}\n`;
+
+    // Create table rows
+    const tableRows = measurements
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .map(measurement => {
+        const type = measurement.type.padEnd(12);
+        const width = (formatMeasurement(parseFloat(measurement.width)) + '"').padEnd(10);
+        const height = (formatMeasurement(parseFloat(measurement.height)) + '"').padEnd(10);
+        const dateTime = formatDateTime(measurement.createdAt).padEnd(25);
+        return `${type} ${width} ${height} ${dateTime}`;
+      })
+      .join('\n');
+
+    // Create summary
+    const summary = `\n\nSUMMARY:\n`;
+    const totalCount = `Total Measurements: ${measurements.length}\n`;
+    
+    // Count by type
+    const typeCounts = measurements.reduce((acc, m) => {
+      acc[m.type] = (acc[m.type] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    const typeBreakdown = Object.entries(typeCounts)
+      .map(([type, count]) => `  ${type}: ${count}`)
+      .join('\n');
+
+    // Combine all content
+    const content = header + clientInfo + dateInfo + separator + tableHeader + tableSeparator + tableRows + summary + totalCount + typeBreakdown;
+
+    // Create and download file
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${clientName.replace(/[^a-zA-Z0-9]/g, '_')}_measurements_${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    console.log('Measurements exported for:', clientName);
+  };
+
   return (
     <Card>
       <CardHeader className="pb-4">
-        <CardTitle className="text-base font-medium flex items-center gap-2">
-          <Ruler className="w-4 h-4" />
-          Measurement History
-          {measurements.length > 0 && (
-            <Badge variant="secondary" className="ml-auto">
-              {measurements.length}
-            </Badge>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <CardTitle className="text-base font-medium flex items-center gap-2">
+              <Ruler className="w-4 h-4" />
+              Measurement History
+              {measurements.length > 0 && (
+                <Badge variant="secondary">
+                  {measurements.length}
+                </Badge>
+              )}
+            </CardTitle>
+          </div>
+          {clientName && measurements.length > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportMeasurements}
+              className="gap-2"
+              data-testid="button-export-measurements"
+            >
+              <Download className="w-4 h-4" />
+              Export
+            </Button>
           )}
-        </CardTitle>
+        </div>
         {clientName && (
           <p className="text-sm text-muted-foreground">
             For {clientName}
