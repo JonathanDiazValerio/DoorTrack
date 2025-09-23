@@ -8,6 +8,7 @@ import ThemeToggle from "./ThemeToggle";
 interface Client {
   id: string;
   name: string;
+  phone: string;
   createdAt: string;
 }
 
@@ -23,9 +24,9 @@ interface Measurement {
 export default function Dashboard() {
   // todo: remove mock functionality
   const [clients, setClients] = useState<Client[]>([
-    { id: '1', name: 'Johnson Construction', createdAt: '2024-03-15T10:30:00Z' },
-    { id: '2', name: 'Smith Renovations', createdAt: '2024-03-14T14:20:00Z' },
-    { id: '3', name: 'Davis Home Builders', createdAt: '2024-03-13T09:15:00Z' },
+    { id: '1', name: 'Johnson Construction', phone: '(555) 123-4567', createdAt: '2024-03-15T10:30:00Z' },
+    { id: '2', name: 'Smith Renovations', phone: '(555) 234-5678', createdAt: '2024-03-14T14:20:00Z' },
+    { id: '3', name: 'Davis Home Builders', phone: '(555) 345-6789', createdAt: '2024-03-13T09:15:00Z' },
   ]);
 
   // todo: remove mock functionality  
@@ -37,10 +38,11 @@ export default function Dashboard() {
 
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
-  const handleAddClient = (name: string) => {
+  const handleAddClient = (name: string, phone: string) => {
     const newClient: Client = {
       id: Date.now().toString(),
       name,
+      phone,
       createdAt: new Date().toISOString(),
     };
     setClients([...clients, newClient]);

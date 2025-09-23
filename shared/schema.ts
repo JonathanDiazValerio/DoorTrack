@@ -6,6 +6,7 @@ import { z } from "zod";
 export const clients = pgTable("clients", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   name: text("name").notNull(),
+  phone: text("phone").notNull().unique(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
