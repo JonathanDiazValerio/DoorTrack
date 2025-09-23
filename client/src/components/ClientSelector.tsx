@@ -66,7 +66,11 @@ export default function ClientSelector({
     
     const query = searchQuery.toLowerCase();
     const nameMatch = client.name.toLowerCase().includes(query);
-    const phoneMatch = client.phone.replace(/\D/g, '').includes(query.replace(/\D/g, ''));
+    
+    // Only do phone matching if the query contains digits
+    const queryDigits = query.replace(/\D/g, '');
+    const phoneMatch = queryDigits.length > 0 ? 
+      client.phone.replace(/\D/g, '').includes(queryDigits) : false;
     
     return nameMatch || phoneMatch;
   });
