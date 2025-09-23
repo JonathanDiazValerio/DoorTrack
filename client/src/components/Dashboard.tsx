@@ -45,6 +45,19 @@ export default function Dashboard() {
     setClients([...clients, newClient]);
   };
 
+  const handleDeleteClient = (clientId: string) => {
+    // Remove client
+    setClients(clients.filter(client => client.id !== clientId));
+    
+    // Remove all measurements for this client
+    setMeasurements(measurements.filter(measurement => measurement.clientId !== clientId));
+    
+    // Clear selection if the deleted client was selected
+    if (selectedClient?.id === clientId) {
+      setSelectedClient(null);
+    }
+  };
+
   const handleSaveMeasurement = (width: number, height: number) => {
     if (!selectedClient) return;
 
@@ -79,6 +92,7 @@ export default function Dashboard() {
               onClientSelect={setSelectedClient}
               clients={clients}
               onAddClient={handleAddClient}
+              onDeleteClient={handleDeleteClient}
             />
             
             <MeasurementForm

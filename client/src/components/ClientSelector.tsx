@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, User } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Plus, User, Trash2 } from "lucide-react";
 
 interface Client {
   id: string;
@@ -17,13 +18,15 @@ interface ClientSelectorProps {
   onClientSelect: (client: Client) => void;
   clients: Client[];
   onAddClient: (name: string) => void;
+  onDeleteClient: (clientId: string) => void;
 }
 
 export default function ClientSelector({ 
   selectedClient, 
   onClientSelect, 
   clients, 
-  onAddClient 
+  onAddClient,
+  onDeleteClient
 }: ClientSelectorProps) {
   const [newClientName, setNewClientName] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -59,24 +62,61 @@ export default function ClientSelector({
         
         <div className="space-y-2">
           {clients.map((client) => (
-            <Button
-              key={client.id}
-              variant={selectedClient?.id === client.id ? "secondary" : "ghost"}
-              className="w-full justify-start p-3 h-auto"
-              onClick={() => {
-                onClientSelect(client);
-                console.log('Client selected:', client.name);
-              }}
-              data-testid={`button-select-client-${client.id}`}
-            >
-              <User className="w-4 h-4 mr-2" />
-              <div className="text-left">
-                <div className="font-medium">{client.name}</div>
-                <div className="text-xs text-muted-foreground">
-                  Added {new Date(client.createdAt).toLocaleDateString()}
+            <div key={client.id} className="flex items-center gap-2">
+              <Button
+                variant={selectedClient?.id === client.id ? "secondary" : "ghost"}
+                className="flex-1 justify-start p-3 h-auto"
+                onClick={() => {
+                  onClientSelect(client);
+                  console.log('Client selected:', client.name);
+                }}
+                data-testid={`button-select-client-${client.id}`}
+              >
+                <User className="w-4 h-4 mr-2" />
+                <div className="text-left">
+                  <div className="font-medium">{client.name}</div>
+                  <div className="text-xs text-muted-foreground">
+                    Added {new Date(client.createdAt).toLocaleDateString()}
+                  </div>
                 </div>
-              </div>
-            </Button>
+              </Button>
+              
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-muted-foreground hover:text-destructive"
+                    data-testid={`button-delete-client-${client.id}`}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Client</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to delete "{client.name}"? This will also remove all measurements for this client. This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel data-testid={`button-cancel-delete-${client.id}`}>
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => {
+                        onDeleteClient(client.id);
+                        console.log('Client deleted:', client.name);
+                      }}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      data-testid={`button-confirm-delete-${client.id}`}
+                    >
+                      Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
           ))}
         </div>
 

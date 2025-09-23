@@ -11,7 +11,7 @@ export default function ClientSelectorExample() {
   
   const [selectedClient, setSelectedClient] = useState(null);
 
-  const handleAddClient = (name) => {
+  const handleAddClient = (name: string) => {
     const newClient = {
       id: Date.now().toString(),
       name,
@@ -20,12 +20,20 @@ export default function ClientSelectorExample() {
     setClients([...clients, newClient]);
   };
 
+  const handleDeleteClient = (clientId: string) => {
+    setClients(clients.filter(client => client.id !== clientId));
+    if (selectedClient?.id === clientId) {
+      setSelectedClient(null);
+    }
+  };
+
   return (
     <ClientSelector
       selectedClient={selectedClient}
       onClientSelect={setSelectedClient}
       clients={clients}
       onAddClient={handleAddClient}
+      onDeleteClient={handleDeleteClient}
     />
   )
 }
