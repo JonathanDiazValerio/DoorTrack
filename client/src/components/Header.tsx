@@ -9,7 +9,7 @@ export default function Header() {
         </div>
         <div>
           <h1 className="text-lg font-medium text-foreground" data-testid="text-app-title">
-            Contractor Measurements
+            Client Measurements
           </h1>
           <p className="text-sm text-muted-foreground">
             Track door & window measurements
