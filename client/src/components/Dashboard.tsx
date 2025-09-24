@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./Header";
 import ClientSelector from "./ClientSelector";
 import MeasurementForm from "./MeasurementForm";
@@ -22,6 +22,18 @@ interface Measurement {
 }
 
 export default function Dashboard() {
+  const [role, setRole] = useState<string | null>(null);
+  useEffect(() => {
+    const sessionId = localStorage.getItem("sessionId");
+    if (sessionId) {
+      fetch("/api/me", { headers: { "x-session-id": sessionId } })
+        .then(res => res.json())
+        .then(data => setRole(data.role ?? null))
+        .catch(() => setRole(null));
+    } else {
+      setRole(null);
+    }
+  }, []);
   // todo: remove mock functionality
   const [clients, setClients] = useState<Client[]>([
     { id: '1', name: 'Johnson Construction', phone: '(555) 123-4567', createdAt: '2024-03-15T10:30:00Z' },
@@ -83,6 +95,21 @@ export default function Dashboard() {
     ? measurements.filter(m => m.clientId === selectedClient.id)
     : [];
 
+  if (role === "admin") {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="flex">
+          <Header />
+          <div className="ml-auto p-4">
+            <ThemeToggle />
+          </div>
+        </div>
+        <div className="container max-w-6xl mx-auto p-4">
+          <div className="text-lg text-center mt-10">Welcome, admin. Use the User Management page to manage users.</div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-background">
       <div className="flex">
@@ -91,7 +118,6 @@ export default function Dashboard() {
           <ThemeToggle />
         </div>
       </div>
-      
       <div className="container max-w-6xl mx-auto p-4 space-y-6">
         <div className="grid lg:grid-cols-2 gap-6">
           <div className="space-y-6">
@@ -102,13 +128,11 @@ export default function Dashboard() {
               onAddClient={handleAddClient}
               onDeleteClient={handleDeleteClient}
             />
-            
             <MeasurementForm
               clientName={selectedClient?.name || null}
               onSaveMeasurement={handleSaveMeasurement}
             />
           </div>
-          
           <div>
             <MeasurementList
               measurements={clientMeasurements}

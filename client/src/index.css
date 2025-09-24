@@ -16,7 +16,7 @@
 
   --background: 0 0% 98%;
 
-  --foreground: 220 13% 18%;
+  --foreground: 220 13% 10%;
 
   --border: 220 13% 91%;
 
@@ -58,7 +58,7 @@
 
   --muted: 0 0% 92%;
 
-  --muted-foreground: 220 9% 46%;
+  --muted-foreground: 220 13% 18%;
 
   --accent: 216 20% 90%;
 
@@ -134,7 +134,7 @@
 
   --background: 220 13% 18%;
 
-  --foreground: 0 0% 95%;
+  --foreground: 0 0% 99%;
 
   --border: 220 13% 28%;
 
@@ -176,7 +176,7 @@
 
   --muted: 220 13% 22%;
 
-  --muted-foreground: 220 9% 64%;
+  --muted-foreground: 0 0% 90%;
 
   --accent: 216 20% 25%;
 
